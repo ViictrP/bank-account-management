@@ -1,0 +1,10 @@
+description = "The routes to interact with the application (e.g. Rest APIs)"
+
+dependencies {
+    implementation project(":application:core")
+
+    implementation libs.rest
+    implementation libs.log
+
+    testImplementation libs.unit_tests
+}

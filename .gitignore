@@ -1,0 +1,10 @@
+# FOLDERS
+build
+/.idea
+/.gradle
+bin/
+
+# FILES
+.classpath
+.project
+.settings

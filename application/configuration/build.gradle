@@ -1,0 +1,27 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.7.RELEASE'
+}
+
+description = "Wires the application together."
+
+jar {
+    archivesBaseName = "bank-account-management"
+}
+
+File applicationBuildDir = project(":application").getBuildDir()
+task copyJarToBin(type: Copy) {
+    from jar
+    into applicationBuildDir
+}
+
+compileJava.finalizedBy copyJarToBin
+
+dependencies {
+    compile project(":application:core")
+
+    implementation libs.database_initialisation
+    implementation libs.spring_boot
+    implementation libs.log
+
+    testImplementation libs.unit_tests
+}

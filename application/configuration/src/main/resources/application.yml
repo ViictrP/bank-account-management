@@ -1,0 +1,20 @@
+#############################################
+#   CONFIGURATION
+#############################################
+
+# SERVER PORT
+server:
+  port: 8080
+
+# Actuator
+management:
+  context-path: /manage
+
+# Datasource
+spring:
+  datasource:
+    donus:
+      jdbc-url: jdbc:postgresql://localhost:15432/donus
+      username: postgres
+      password: bankAccountManagementAdmin
+      driver-class-name: org.postgresql.Driver
