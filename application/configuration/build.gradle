@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.7.RELEASE'
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
 }
 
 description = "Wires the application together."
@@ -18,6 +18,8 @@ compileJava.finalizedBy copyJarToBin
 
 dependencies {
     compile project(":application:core")
+    compile project(":application:dataproviders")
+    compile project(":application:entrypoints")
 
     implementation libs.database_initialisation
     implementation libs.spring_boot

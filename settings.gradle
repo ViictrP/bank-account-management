@@ -1,15 +1,15 @@
 rootProject.name = 'bank-account-management'
 
 // Application
-findProject(':application:configuration')?.name = 'configuration'
-include 'application:configuration'
-
 include 'application:core'
 findProject(':application:core')?.name = 'core'
 
 include 'application:dataproviders'
 findProject(':application:dataproviders')?.name = 'dataproviders'
 
-include 'application:entrypoint'
-findProject(':application:entrypoint')?.name = 'entrypoint'
+include 'application:entrypoints'
+findProject(':application:entrypoints')?.name = 'entrypoints'
+
+findProject(':application:configuration')?.name = 'configuration'
+include 'application:configuration'
 

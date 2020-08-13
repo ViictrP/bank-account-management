@@ -2,17 +2,21 @@ package com.victorprado.donus.core.usecase.createaccount;
 
 import com.victorprado.donus.core.entity.BankAccount;
 import com.victorprado.donus.core.entity.Customer;
-import com.victorprado.donus.core.usecase.getdetails.GetCustomerDetails;
 
 public class CreateAccountUseCase {
 
-    GetCustomerDetails getCustomerDetails;
+    private final ManageCustomer manageCustomer;
 
-    public CreateAccountUseCase(GetCustomerDetails getCustomerDetails) {
-        this.getCustomerDetails = getCustomerDetails;
+    public CreateAccountUseCase(ManageCustomer manageCustomer) {
+        this.manageCustomer = manageCustomer;
     }
 
     public BankAccount create(Customer customer) {
+        Customer customerEntity = manageCustomer.getOne(customer.getCpf())
+                .orElseThrow(() -> new CustomerNotFoundException());
+
+
+
         return null;
     }
 }

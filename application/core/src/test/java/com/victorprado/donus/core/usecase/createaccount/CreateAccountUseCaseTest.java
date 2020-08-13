@@ -2,16 +2,17 @@ package com.victorprado.donus.core.usecase.createaccount;
 
 import com.victorprado.donus.core.entity.BankAccount;
 import com.victorprado.donus.core.entity.Customer;
-import com.victorprado.donus.core.usecase.getdetails.GetCustomerDetails;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class CreateAccountUseCaseTest {
 
-    GetCustomerDetails getCustomerDetails = mock(GetCustomerDetails.class);
-    CreateAccountUseCase createAccountUseCase = new CreateAccountUseCase(getCustomerDetails);
+    ManageCustomer manageCustomer = mock(ManageCustomer.class);
+    CreateAccountUseCase createAccountUseCase = new CreateAccountUseCase(manageCustomer);
 
     Customer customerThatDoesNotHaveAccount = new Customer("Victor Prado", "00000000000");
     Customer customerThatDoesNotExists = new Customer("Ronaldo Prates", "00000000001");
@@ -29,14 +30,14 @@ public class CreateAccountUseCaseTest {
     }
 
     private void givenACustomerThatDoesNotHaveAccount() {
-        when(getCustomerDetails.getDetails(anyString())).thenReturn(customerThatDoesNotHaveAccount);
+        when(manageCustomer.getOne(anyString())).thenReturn(Optional.of(customerThatDoesNotHaveAccount));
     }
 
     private void givenACustomerThatDoesNotExists() {
-        when(getCustomerDetails.getDetails(anyString())).thenReturn(null);
+        when(manageCustomer.getOne(anyString())).thenReturn(Optional.empty());
     }
 
     private void givenACustomerThatDoesHaveAccount() {
-        when(getCustomerDetails.getDetails(anyString())).thenReturn(customerThatDoesHaveAccount);
+        when(manageCustomer.getOne(anyString())).thenReturn(Optional.of(customerThatDoesHaveAccount));
     }
 }

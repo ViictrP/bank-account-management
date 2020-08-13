@@ -6,12 +6,12 @@ subprojects {
         mavenLocal()
         mavenCentral()
         maven {
-            url "http://repo.bodar.com"
+            url "https://plugins.gradle.org/m2/"
         }
     }
 
     ext {
-        spring_version = "2.1.7.RELEASE"
+        spring_version = "2.2.5.RELEASE"
         libs = [
                 unit_tests             : [
                         "junit:junit:4.+",
@@ -36,11 +36,11 @@ subprojects {
 
                 database               : [
                         "org.springframework.boot:spring-boot-starter-jdbc:${spring_version}",
+                        "org.springframework.boot:spring-boot-starter-data-jdbc:${spring_version}",
                 ],
 
                 string_utils           : [
-                        "org.projectlombok:lombok:1.18.8",
-                        "org.apache.commons:commons-lang3:3.4"
+                        "org.apache.commons:commons-lang3:3.9"
                 ],
 
                 log                    : [
