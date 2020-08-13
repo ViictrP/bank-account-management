@@ -2,6 +2,6 @@ description = "Entities (domain objects) and uses cases that implement the busin
 
 dependencies {
     implementation libs.string_utils
-
+    implementation libs.log
     testImplementation libs.unit_tests
 }

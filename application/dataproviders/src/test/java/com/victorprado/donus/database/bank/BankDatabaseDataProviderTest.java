@@ -1,5 +1,6 @@
 package com.victorprado.donus.database.bank;
 
+import com.victorprado.donus.core.entity.BankAccount;
 import com.victorprado.donus.core.entity.Customer;
 import com.victorprado.donus.core.usecase.createaccount.DataProviderException;
 import org.junit.Test;
@@ -17,7 +18,6 @@ public class BankDatabaseDataProviderTest {
 
     Customer customerEntity = new Customer("12rqedf", "Victor Prado", "00000000000");
     Customer validCustomer = new Customer("2318386", "André Giorgiani", "00000000001");
-    Customer invalidCustomer = new Customer("2318386", "André Giorgiani", null);
 
     BankDatabaseDataProvider bankDatabaseDataProvider = new BankDatabaseDataProvider(jdbcTemplate);
 
@@ -53,6 +53,21 @@ public class BankDatabaseDataProviderTest {
         bankDatabaseDataProvider.register(validCustomer);
     }
 
+    @Test
+    public void shouldCreateAccountWithSuccess() {
+        BankAccount bankAccount = new BankAccount(customerEntity);
+        bankDatabaseDataProvider.create(bankAccount);
+
+        verify(jdbcTemplate).update(anyObject(), eq(bankAccount.getId()), eq(customerEntity.getId()), eq(bankAccount.getNumber()), eq(bankAccount.getBalance()));
+    }
+
+    @Test(expected = DataProviderException.class)
+    public void shouldThrowErrorWhenCreateAccount() {
+        givenAAccountrCreationWithException();
+        BankAccount bankAccount = new BankAccount(customerEntity);
+        bankDatabaseDataProvider.create(bankAccount);
+    }
+
     private void givenACustomerThatExists() {
         when(jdbcTemplate.queryForObject(anyObject(), eq(Customer.class), eq("00000000000"))).thenReturn(customerEntity);
     }
@@ -63,5 +78,9 @@ public class BankDatabaseDataProviderTest {
 
     private void givenACustomerCreationWithException() {
         when(jdbcTemplate.update(anyObject(), anyString(), anyString(), anyString())).thenThrow(InvalidResultSetAccessException.class);
+    }
+
+    private void givenAAccountrCreationWithException() {
+        when(jdbcTemplate.update(anyObject(), anyString(), anyString(), anyString(), anyString())).thenThrow(InvalidResultSetAccessException.class);
     }
 }

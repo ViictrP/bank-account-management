@@ -1,5 +1,6 @@
 package com.victorprado.donus.core.usecase.createaccount;
 
+import com.victorprado.donus.core.condition.NullObjectException;
 import com.victorprado.donus.core.entity.BankAccount;
 import com.victorprado.donus.core.entity.Customer;
 import org.junit.Test;
@@ -12,7 +13,8 @@ import static org.mockito.Mockito.*;
 public class CreateAccountUseCaseTest {
 
     ManageCustomer manageCustomer = mock(ManageCustomer.class);
-    CreateAccountUseCase createAccountUseCase = new CreateAccountUseCase(manageCustomer);
+    ManageBankAccount manageBankAccount = mock(ManageBankAccount.class);
+    CreateAccountUseCase createAccountUseCase = new CreateAccountUseCase(manageCustomer, manageBankAccount);
 
     Customer customerThatDoesNotHaveAccount = new Customer("Victor Prado", "00000000000");
     Customer customerThatDoesNotExists = new Customer("Ronaldo Prates", "00000000001");
@@ -27,6 +29,28 @@ public class CreateAccountUseCaseTest {
         assertThat(account).isNotNull();
         assertThat(account.getBalance()).isZero();
         assertThat(account.getCustomer().getId()).isEqualTo(customerThatDoesNotHaveAccount.getId());
+    }
+
+    @Test
+    public void shouldCreateAccountWithSuccessEvenWhenCustomerDoesNotExists() {
+        givenACustomerThatDoesNotExists();
+
+        BankAccount account = createAccountUseCase.create(customerThatDoesNotExists);
+
+        assertThat(account).isNotNull();
+        assertThat(account.getBalance()).isZero();
+        assertThat(account.getCustomer().getId()).isEqualTo(customerThatDoesNotExists.getId());
+    }
+
+    @Test(expected = InvalidEntityException.class)
+    public void shouldNotCreateAccountWithInvalidCustomer() {
+        Customer customer = new Customer();
+        createAccountUseCase.create(customer);
+    }
+
+    @Test(expected = NullObjectException.class)
+    public void shouldNotCreateAccountWithNullCustomer() {
+        createAccountUseCase.create(null);
     }
 
     private void givenACustomerThatDoesNotHaveAccount() {

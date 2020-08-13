@@ -36,10 +36,9 @@ public class BankDatabaseDataProvider implements ManageCustomer, ManageBankAccou
     }
 
     @Override
-    public boolean register(@NonNull Customer customer) {
+    public void register(@NonNull Customer customer) {
         try {
-            int result = jdbcTemplate.update("INSERT INTO donus.customer(id, cpf, name) VALUES(?,?,?)", customer.getId(), customer.getCpf(), customer.getName());
-            return Boolean.parseBoolean(String.valueOf(result));
+            jdbcTemplate.update("INSERT INTO donus.customer(id, cpf, name) VALUES(?,?,?)", customer.getId(), customer.getCpf(), customer.getName());
         } catch (DataAccessException error) {
             LOGGER.error(error.getMessage());
             throw new DataProviderInsertException();
@@ -47,7 +46,12 @@ public class BankDatabaseDataProvider implements ManageCustomer, ManageBankAccou
     }
 
     @Override
-    public boolean create(BankAccount account) throws DataProviderException {
-        return false;
+    public void create(BankAccount account) throws DataProviderException {
+        try {
+            jdbcTemplate.update("INSERT INTO donus.bank_account(id, customer_id, number, balance) VALUES(?,?,?,?)", account.getId(), account.getCustomer().getId(), account.getNumber(), account.getBalance());
+        } catch (DataAccessException error) {
+            LOGGER.error(error.getMessage());
+            throw new DataProviderInsertException();
+        }
     }
 }
