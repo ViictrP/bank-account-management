@@ -1,4 +1,4 @@
-package com.victorprado.donus.core.usecase.createcustomer;
+package com.victorprado.donus.core.usecase.createaccount;
 
 import com.victorprado.donus.core.entity.Customer;
 

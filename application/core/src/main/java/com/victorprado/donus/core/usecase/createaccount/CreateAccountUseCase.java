@@ -3,8 +3,6 @@ package com.victorprado.donus.core.usecase.createaccount;
 import com.victorprado.donus.core.condition.CheckNotNull;
 import com.victorprado.donus.core.entity.BankAccount;
 import com.victorprado.donus.core.entity.Customer;
-import com.victorprado.donus.core.usecase.createcustomer.CustomerNotFoundException;
-import com.victorprado.donus.core.usecase.createcustomer.GetCustomer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
