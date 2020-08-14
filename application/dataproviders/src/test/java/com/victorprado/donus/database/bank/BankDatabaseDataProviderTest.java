@@ -46,7 +46,7 @@ public class BankDatabaseDataProviderTest {
         BankAccount bankAccount = new BankAccount(customerEntity);
         bankDatabaseDataProvider.create(bankAccount);
 
-        verify(jdbcTemplate).update(anyObject(), eq(bankAccount.getId()), eq(customerEntity.getId()), eq(bankAccount.getNumber()), eq(bankAccount.getBalance()));
+        verify(jdbcTemplate).update(anyObject(), eq(bankAccount.getId()), eq(customerEntity.getId()), eq(bankAccount.getNumber()), eq(bankAccount.getBalance()), eq(bankAccount.getCreatedDate()), eq(bankAccount.getLastModifiedDate()), eq(bankAccount.isDeleted()));
         assertThat(bankAccount.getCreatedDate()).isNotNull();
         assertThat(bankAccount.getLastModifiedDate()).isNotNull();
     }
@@ -82,11 +82,11 @@ public class BankDatabaseDataProviderTest {
     }
 
     private void givenCustomerThatDoesNotExists() {
-        when(jdbcTemplate.queryForObject(anyObject(), any(CustomerRowMapper.class) ,eq("00000000000"))).thenThrow(InvalidResultSetAccessException.class);
+        when(jdbcTemplate.queryForObject(anyObject(), any(CustomerRowMapper.class), eq("00000000000"))).thenThrow(InvalidResultSetAccessException.class);
     }
 
     private void givenAccountCreationWithException() {
-        when(jdbcTemplate.update(anyObject(), anyString(), anyString(), anyString(), anyString())).thenThrow(InvalidResultSetAccessException.class);
+        when(jdbcTemplate.update(anyObject(), anyString(), anyString(), anyString(), anyString(),  anyString(), anyString(), anyString())).thenThrow(InvalidResultSetAccessException.class);
     }
 
     private void givenAccountThatExists() {

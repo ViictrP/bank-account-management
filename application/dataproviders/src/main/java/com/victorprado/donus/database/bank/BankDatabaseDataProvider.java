@@ -43,7 +43,7 @@ public class BankDatabaseDataProvider implements GetCustomer, CreateBankAccount,
         try {
             account.generateCreatedDate();
             account.updateLastMofiedDate();
-            jdbcTemplate.update("INSERT INTO donus.bank_account(id, customer_id, number, balance) VALUES(?,?,?,?)", account.getId(), account.getCustomer().getId(), account.getNumber(), account.getBalance());
+            jdbcTemplate.update("INSERT INTO donus.bank_account(id, customer_id, number, balance, created_date, last_modified_date, deleted) VALUES(?,?,?,?,?,?,?)", account.getId(), account.getCustomer().getId(), account.getNumber(), account.getBalance(), account.getCreatedDate(), account.getLastModifiedDate(), account.isDeleted());
         } catch (DataAccessException error) {
             LOGGER.error(error.getMessage());
             throw new DataProviderInsertException();

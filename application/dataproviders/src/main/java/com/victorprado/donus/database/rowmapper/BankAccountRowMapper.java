@@ -13,6 +13,7 @@ public class BankAccountRowMapper implements RowMapper<BankAccount> {
     private static final String BALANCE = "balance";
     private static final String NUMBER = "number";
     private static final String CREATED_DATE = "created_date";
+    private static final String LAST_MODIFIED_DATE = "last_modified_date";
     private static final String DELETED = "deleted";
 
     @Override
@@ -21,7 +22,10 @@ public class BankAccountRowMapper implements RowMapper<BankAccount> {
         bankAccount.setId(rs.getString(ID));
         bankAccount.setBalance(rs.getDouble(BALANCE));
         bankAccount.setNumber(rs.getString(NUMBER));
-        bankAccount.setCreatedDate(LocalDateTime.parse(rs.getString(CREATED_DATE)));
+
+        bankAccount.setCreatedDate(rs.getObject(CREATED_DATE, LocalDateTime.class));
+        bankAccount.setLastModifiedDate(rs.getObject(LAST_MODIFIED_DATE, LocalDateTime.class));
+
         bankAccount.setDeleted(rs.getBoolean(DELETED));
         return bankAccount;
     }
