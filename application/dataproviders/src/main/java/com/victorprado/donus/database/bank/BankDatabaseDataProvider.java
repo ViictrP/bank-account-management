@@ -46,7 +46,7 @@ public class BankDatabaseDataProvider implements ManageCustomer, ManageBankAccou
     }
 
     @Override
-    public void create(BankAccount account) throws DataProviderException {
+    public void create(@NonNull BankAccount account) throws DataProviderException {
         try {
             jdbcTemplate.update("INSERT INTO donus.bank_account(id, customer_id, number, balance) VALUES(?,?,?,?)", account.getId(), account.getCustomer().getId(), account.getNumber(), account.getBalance());
         } catch (DataAccessException error) {

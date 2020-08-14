@@ -1,0 +1,113 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 1
+      author: system
+      liquibaseSchemaName: donus
+      changes:
+        - createTable:
+            tableName: customer
+            columns:
+              - column:
+                  name: id
+                  type: varchar(255)
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cpf
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: last_modified_date
+                  type: timestamp
+              - column:
+                  name: deleted
+                  type: boolean
+
+        - createTable:
+            tableName: bank_account
+            columns:
+              - column:
+                  name: id
+                  type: varchar(255)
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_customer_id_bank_account
+                    referencedColumnNames: id
+                    referencedTableName: customer
+                    onDelete: RESTRICT
+                    onUpdate: RESTRICT
+              - column:
+                  name: balance
+                  type: numeric(12,4)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: number
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: last_modified_date
+                  type: timestamp
+              - column:
+                  name: deleted
+                  type: boolean
+
+        - createTable:
+            tableName: bank_transition
+            columns:
+              - column:
+                  name: id
+                  type: varchar(255)
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: source_account_id
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: destination_account_id
+                  type: varchar(255)
+              - column:
+                  name: amount
+                  type: numeric(12,4)
+                  constraints:
+                    nullable: false

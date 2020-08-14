@@ -31,12 +31,13 @@ subprojects {
                 ],
 
                 database_initialisation: [
-                        "org.springframework.boot:spring-boot-starter-jdbc:${spring_version}"
+                        "org.springframework.boot:spring-boot-starter-jdbc:${spring_version}",
+                        "org.liquibase:liquibase-core:4.0.0"
                 ],
 
                 database               : [
                         "org.springframework.boot:spring-boot-starter-jdbc:${spring_version}",
-                        "org.springframework.boot:spring-boot-starter-data-jdbc:${spring_version}",
+                        "org.springframework.boot:spring-boot-starter-data-jdbc:${spring_version}"
                 ],
 
                 string_utils           : [
