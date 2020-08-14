@@ -6,5 +6,9 @@ public abstract class Upgradable extends Creatable {
 
     LocalDateTime lastModifiedDate;
 
+    public LocalDateTime getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
     abstract void updateLastMofiedDate();
 }

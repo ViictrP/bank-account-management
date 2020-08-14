@@ -3,6 +3,8 @@ package com.victorprado.donus.database.bank;
 import com.victorprado.donus.core.entity.BankAccount;
 import com.victorprado.donus.core.entity.Customer;
 import com.victorprado.donus.core.exception.DataProviderException;
+import com.victorprado.donus.database.rowmapper.BankAccountRowMapper;
+import com.victorprado.donus.database.rowmapper.CustomerRowMapper;
 import org.junit.Test;
 import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +24,7 @@ public class BankDatabaseDataProviderTest {
 
     @Test
     public void shouldGetCustomerDetailsWithSuccess() {
-        givenACustomerThatExists();
+        givenCustomerThatExists();
 
         Optional<Customer> customer = bankDatabaseDataProvider.getOne("00000000000");
 
@@ -32,7 +34,7 @@ public class BankDatabaseDataProviderTest {
 
     @Test
     public void shouldGetCustomerDetailsAndReturnEmpty() {
-        givenACustomerThatDoesNotExists();
+        givenCustomerThatDoesNotExists();
 
         Optional<Customer> customer = bankDatabaseDataProvider.getOne("00000000000");
 
@@ -45,24 +47,55 @@ public class BankDatabaseDataProviderTest {
         bankDatabaseDataProvider.create(bankAccount);
 
         verify(jdbcTemplate).update(anyObject(), eq(bankAccount.getId()), eq(customerEntity.getId()), eq(bankAccount.getNumber()), eq(bankAccount.getBalance()));
+        assertThat(bankAccount.getCreatedDate()).isNotNull();
+        assertThat(bankAccount.getLastModifiedDate()).isNotNull();
     }
 
     @Test(expected = DataProviderException.class)
     public void shouldThrowErrorWhenCreateAccount() {
-        givenAAccountrCreationWithException();
+        givenAccountCreationWithException();
         BankAccount bankAccount = new BankAccount(customerEntity);
         bankDatabaseDataProvider.create(bankAccount);
     }
 
-    private void givenACustomerThatExists() {
-        when(jdbcTemplate.queryForObject(anyObject(), eq(Customer.class), eq("00000000000"))).thenReturn(customerEntity);
+    @Test
+    public void shouldGetAccountForCustomerWithSuccess() {
+        givenAccountThatExists();
+
+        Optional<BankAccount> bankAccount = bankDatabaseDataProvider.getAccount("12345asdfg");
+
+        assertThat(bankAccount).isPresent();
+        assertThat(bankAccount.get().getCustomer().getId()).isEqualTo(customerEntity.getId());
     }
 
-    private void givenACustomerThatDoesNotExists() {
-        when(jdbcTemplate.queryForObject(anyObject(), eq(Customer.class), eq("00000000000"))).thenThrow(InvalidResultSetAccessException.class);
+    @Test
+    public void shouldThrowErrorWhenGetAccountThatDoenstExist() {
+        givenAccountThatDoenstExists();
+
+        Optional<BankAccount> bankAccount = bankDatabaseDataProvider.getAccount("12345asdfg");
+
+        assertThat(bankAccount).isEmpty();
     }
 
-    private void givenAAccountrCreationWithException() {
+    private void givenCustomerThatExists() {
+        when(jdbcTemplate.queryForObject(anyObject(), any(CustomerRowMapper.class), eq("00000000000"))).thenReturn(customerEntity);
+    }
+
+    private void givenCustomerThatDoesNotExists() {
+        when(jdbcTemplate.queryForObject(anyObject(), any(CustomerRowMapper.class) ,eq("00000000000"))).thenThrow(InvalidResultSetAccessException.class);
+    }
+
+    private void givenAccountCreationWithException() {
         when(jdbcTemplate.update(anyObject(), anyString(), anyString(), anyString(), anyString())).thenThrow(InvalidResultSetAccessException.class);
+    }
+
+    private void givenAccountThatExists() {
+        BankAccount bankAccount = new BankAccount(customerEntity);
+        when(jdbcTemplate.queryForObject(anyObject(), any(BankAccountRowMapper.class), eq("12345asdfg"))).thenReturn(bankAccount);
+    }
+
+    private void givenAccountThatDoenstExists() {
+        BankAccount bankAccount = new BankAccount(customerEntity);
+        when(jdbcTemplate.queryForObject(anyObject(), any(BankAccountRowMapper.class), eq("12345asdfg"))).thenThrow(InvalidResultSetAccessException.class);
     }
 }

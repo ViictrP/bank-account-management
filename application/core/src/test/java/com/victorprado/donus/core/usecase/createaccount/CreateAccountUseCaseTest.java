@@ -14,7 +14,8 @@ public class CreateAccountUseCaseTest {
 
     GetCustomer getCustomer = mock(GetCustomer.class);
     CreateBankAccount createBankAccount = mock(CreateBankAccount.class);
-    CreateAccountUseCase createAccountUseCase = new CreateAccountUseCase(getCustomer, createBankAccount);
+    GetBankAccount getBankAccount = mock(GetBankAccount.class);
+    CreateAccountUseCase createAccountUseCase = new CreateAccountUseCase(getCustomer, createBankAccount, getBankAccount);
 
     Customer customerThatDoesNotHaveAccount = new Customer("Victor Prado", "00000000000");
     Customer customerThatDoesNotExists = new Customer("Ronaldo Prates", "00000000001");
@@ -22,6 +23,7 @@ public class CreateAccountUseCaseTest {
 
     @Test
     public void shouldCreateAccountWithSuccess() {
+        givenAccountThatDoenstExists();
         givenACustomerThatDoesNotHaveAccount();
 
         BankAccount account = createAccountUseCase.create(customerThatDoesNotHaveAccount);
@@ -44,6 +46,15 @@ public class CreateAccountUseCaseTest {
         createAccountUseCase.create(customer);
     }
 
+    @Test(expected = CustomerAlreadyHasAccountException.class)
+    public void shouldNotCreateAccountIfCustomerAlreadyHasOne() {
+        givenACustomerThatExists();
+        givenACustomerThatHasAccount();
+
+        Customer customer = new Customer("dasdhi12", "Victor Prado", "00000000000");
+        createAccountUseCase.create(customer);
+    }
+
     @Test(expected = NullObjectException.class)
     public void shouldNotCreateAccountWithNullCustomer() {
         createAccountUseCase.create(null);
@@ -57,7 +68,15 @@ public class CreateAccountUseCaseTest {
         when(getCustomer.getOne(anyString())).thenReturn(Optional.empty());
     }
 
-    private void givenACustomerThatDoesHaveAccount() {
-        when(getCustomer.getOne(anyString())).thenReturn(Optional.of(customerThatDoesHaveAccount));
+    private void givenACustomerThatExists() {
+        when(getCustomer.getOne(anyString())).thenReturn(Optional.of(customerThatDoesNotHaveAccount));
+    }
+
+    private void givenAccountThatDoenstExists() {
+        when(getBankAccount.getAccount(anyString())).thenReturn(Optional.empty());
+    }
+
+    private void givenACustomerThatHasAccount() {
+        when(getBankAccount.getAccount(anyString())).thenReturn(Optional.of(new BankAccount()));
     }
 }

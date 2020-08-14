@@ -13,6 +13,11 @@ public class BankAccount extends Upgradable implements EntityValidator {
     private String number;
     private Customer customer;
     private Double balance;
+    private boolean deleted;
+
+    public BankAccount() {
+
+    }
 
     public BankAccount(Customer customer) {
         this.customer = customer;
@@ -70,6 +75,14 @@ public class BankAccount extends Upgradable implements EntityValidator {
     @Override
     public void updateLastMofiedDate() {
         this.lastModifiedDate = LocalDateTime.now();
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

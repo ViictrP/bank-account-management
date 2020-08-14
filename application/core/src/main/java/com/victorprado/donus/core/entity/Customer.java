@@ -5,7 +5,6 @@ import com.victorprado.donus.core.validator.EntityValidator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class Customer extends Upgradable implements EntityValidator {
 
@@ -14,23 +13,17 @@ public class Customer extends Upgradable implements EntityValidator {
     private String cpf;
 
     public Customer() {
-        this.generateId();
     }
 
     public Customer(String name, String cpf) {
         this.name = name;
         this.cpf = cpf;
-        this.generateId();
     }
 
     public Customer(String id, String name, String cpf) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
-    }
-
-    private void generateId() {
-        this.id = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -59,7 +52,7 @@ public class Customer extends Upgradable implements EntityValidator {
 
     @Override
     public void validate() {
-        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(name) || StringUtils.isEmpty(cpf)) {
+        if (StringUtils.isEmpty(cpf)) {
             throw new InvalidEntityException();
         }
     }

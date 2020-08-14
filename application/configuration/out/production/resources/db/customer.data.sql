@@ -1,0 +1,4 @@
+INSERT INTO donus.customer(id, name, cpf, created_date, last_modified_date, deleted) VALUES ('b8227d7c-665b-44c1-aa2e-c01283c039c3', 'Marlene Bianca Nunes', '33835920065', current_timestamp, current_timestamp, null);
+INSERT INTO donus.customer(id, name, cpf, created_date, last_modified_date, deleted) VALUES ('3b5f85e4-32bf-473f-9e9f-e4e4ecb512b0', 'Ruan Carlos Julio da Luz', '18510284989', current_timestamp, current_timestamp, null);
+INSERT INTO donus.customer(id, name, cpf, created_date, last_modified_date, deleted) VALUES ('33e52943-09dd-4566-9243-1603f0026166', 'Heloise Gabrielly Aragão', '95873977895', current_timestamp, current_timestamp, null);
+INSERT INTO donus.customer(id, name, cpf, created_date, last_modified_date, deleted) VALUES ('5078ddd8-1ae5-4b76-bb41-1d821dd400f6', 'Levi Nelson Jorge Duarte', '90556125452', current_timestamp, current_timestamp, null);
