@@ -1,4 +1,4 @@
-package com.victorprado.donus.core.usecase.createaccount;
+package com.victorprado.donus.core.usecase.createcustomer;
 
 public class CustomerNotFoundException extends RuntimeException {
 

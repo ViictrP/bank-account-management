@@ -1,8 +1,10 @@
 package com.victorprado.donus.core.usecase.createaccount;
 
 import com.victorprado.donus.core.entity.BankAccount;
+import com.victorprado.donus.core.exception.DataProviderException;
 
-public interface ManageBankAccount {
+@FunctionalInterface
+public interface CreateBankAccount {
 
     void create(BankAccount account) throws DataProviderException;
 }

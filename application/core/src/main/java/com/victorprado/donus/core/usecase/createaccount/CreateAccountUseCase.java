@@ -3,6 +3,8 @@ package com.victorprado.donus.core.usecase.createaccount;
 import com.victorprado.donus.core.condition.CheckNotNull;
 import com.victorprado.donus.core.entity.BankAccount;
 import com.victorprado.donus.core.entity.Customer;
+import com.victorprado.donus.core.usecase.createcustomer.CustomerNotFoundException;
+import com.victorprado.donus.core.usecase.createcustomer.GetCustomer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,12 +14,12 @@ public class CreateAccountUseCase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateAccountUseCase.class);
 
-    private final ManageCustomer manageCustomer;
-    private final ManageBankAccount manageBankAccount;
+    private final GetCustomer getCustomer;
+    private final CreateBankAccount createBankAccount;
 
-    public CreateAccountUseCase(ManageCustomer manageCustomer, ManageBankAccount manageBankAccount) {
-        this.manageCustomer = manageCustomer;
-        this.manageBankAccount = manageBankAccount;
+    public CreateAccountUseCase(GetCustomer getCustomer, CreateBankAccount createBankAccount) {
+        this.getCustomer = getCustomer;
+        this.createBankAccount = createBankAccount;
     }
 
     public BankAccount create(Customer customer) throws InvalidEntityException {
@@ -25,22 +27,11 @@ public class CreateAccountUseCase {
         LOGGER.info("Starting new account creation for customer {}", customer.getName());
         LOGGER.info("validating new customer {}", customer.getName());
         customer.validate();
-        try {
-            LOGGER.info("searching for the customer {}", customer.getName());
-            Customer customerEntity = manageCustomer.getOne(customer.getCpf())
-                    .orElseThrow(CustomerNotFoundException::new);
+        LOGGER.info("searching for the customer {}", customer.getName());
+        Customer customerEntity = getCustomer.getOne(customer.getCpf())
+                .orElseThrow(CustomerNotFoundException::new);
 
-            return createAccount(customerEntity);
-        } catch (CustomerNotFoundException exception) {
-            LOGGER.info("no customer were found with the CPF {}", customer.getCpf());
-            return createAccountForNewCustomer(customer);
-        }
-    }
-
-    private BankAccount createAccountForNewCustomer(Customer customer) {
-        LOGGER.info("registering the new customer {}", customer.getName());
-        manageCustomer.register(customer);
-        return this.createAccount(customer);
+        return createAccount(customerEntity);
     }
 
     private BankAccount createAccount(Customer customerEntity) {
@@ -49,7 +40,7 @@ public class CreateAccountUseCase {
                 .build();
 
         LOGGER.info("creating new account. number {}", account.getNumber());
-        manageBankAccount.create(account);
+        createBankAccount.create(account);
         return account;
     }
 }

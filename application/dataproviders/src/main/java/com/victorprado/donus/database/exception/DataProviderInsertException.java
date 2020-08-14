@@ -1,6 +1,6 @@
 package com.victorprado.donus.database.exception;
 
-import com.victorprado.donus.core.usecase.createaccount.DataProviderException;
+import com.victorprado.donus.core.exception.DataProviderException;
 
 public class DataProviderInsertException extends DataProviderException {
 

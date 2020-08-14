@@ -2,9 +2,11 @@ package com.victorprado.donus.database.bank;
 
 import com.victorprado.donus.core.entity.BankAccount;
 import com.victorprado.donus.core.entity.Customer;
-import com.victorprado.donus.core.usecase.createaccount.DataProviderException;
-import com.victorprado.donus.core.usecase.createaccount.ManageBankAccount;
-import com.victorprado.donus.core.usecase.createaccount.ManageCustomer;
+import com.victorprado.donus.core.usecase.createaccount.CreateBankAccount;
+import com.victorprado.donus.core.exception.DataProviderException;
+import com.victorprado.donus.core.usecase.createcustomer.CreateCustomer;
+import com.victorprado.donus.core.usecase.createcustomer.GetCustomer;
+import com.victorprado.donus.core.usecase.createcustomer.UpdateCustomer;
 import com.victorprado.donus.database.exception.DataProviderInsertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.Optional;
 
-public class BankDatabaseDataProvider implements ManageCustomer, ManageBankAccount {
+public class BankDatabaseDataProvider implements CreateCustomer, GetCustomer, UpdateCustomer, CreateBankAccount {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BankDatabaseDataProvider.class);
 
@@ -49,6 +51,16 @@ public class BankDatabaseDataProvider implements ManageCustomer, ManageBankAccou
     public void create(@NonNull BankAccount account) throws DataProviderException {
         try {
             jdbcTemplate.update("INSERT INTO donus.bank_account(id, customer_id, number, balance) VALUES(?,?,?,?)", account.getId(), account.getCustomer().getId(), account.getNumber(), account.getBalance());
+        } catch (DataAccessException error) {
+            LOGGER.error(error.getMessage());
+            throw new DataProviderInsertException();
+        }
+    }
+
+    @Override
+    public void update(Customer customer) throws DataProviderException {
+        try {
+            jdbcTemplate.update("UPDATE donus.customer SET name = ? AND cpf = ? WHERE id = ?", customer.getName(), customer.getCpf(), customer.getId());
         } catch (DataAccessException error) {
             LOGGER.error(error.getMessage());
             throw new DataProviderInsertException();

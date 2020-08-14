@@ -2,7 +2,7 @@ package com.victorprado.donus.database.bank;
 
 import com.victorprado.donus.core.entity.BankAccount;
 import com.victorprado.donus.core.entity.Customer;
-import com.victorprado.donus.core.usecase.createaccount.DataProviderException;
+import com.victorprado.donus.core.exception.DataProviderException;
 import org.junit.Test;
 import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,6 +68,21 @@ public class BankDatabaseDataProviderTest {
         bankDatabaseDataProvider.create(bankAccount);
     }
 
+    @Test
+    public void shouldUpdateCustomerWithSuccess() {
+        givenACustomerThatExists();
+
+        bankDatabaseDataProvider.update(validCustomer);
+        verify(jdbcTemplate).update(anyObject(), eq("André Giorgiani"), eq("00000000001"), eq("2318386"));
+    }
+
+    @Test(expected = DataProviderException.class)
+    public void shouldThrowErrorWhenUpdatingCustomer() {
+        givenCustomerUpdateWithException();
+
+        bankDatabaseDataProvider.update(validCustomer);
+    }
+
     private void givenACustomerThatExists() {
         when(jdbcTemplate.queryForObject(anyObject(), eq(Customer.class), eq("00000000000"))).thenReturn(customerEntity);
     }
@@ -82,5 +97,9 @@ public class BankDatabaseDataProviderTest {
 
     private void givenAAccountrCreationWithException() {
         when(jdbcTemplate.update(anyObject(), anyString(), anyString(), anyString(), anyString())).thenThrow(InvalidResultSetAccessException.class);
+    }
+
+    private void givenCustomerUpdateWithException() {
+        when(jdbcTemplate.update(anyObject(), anyString(), anyString(), anyString())).thenThrow(InvalidResultSetAccessException.class);
     }
 }
