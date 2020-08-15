@@ -28,7 +28,7 @@ public class CreateAccountUseCase {
         customer.validate();
 
         LOGGER.info("searching for the customer {}", customer.getCpf());
-        Customer customerEntity = getCustomer.getOne(customer.getCpf())
+        Customer customerEntity = getCustomer.getCustomer(customer.getCpf())
                 .orElseThrow(CustomerNotFoundException::new);
 
         LOGGER.info("validating if customer already has a bank account");
@@ -46,7 +46,7 @@ public class CreateAccountUseCase {
                 .customer(customerEntity)
                 .build();
 
-        createBankAccount.create(account);
+        createBankAccount.createAccount(account);
         LOGGER.info("account created. number {}", account.getNumber());
         return account;
     }

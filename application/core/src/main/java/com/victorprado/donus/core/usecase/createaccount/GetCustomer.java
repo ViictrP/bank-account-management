@@ -7,5 +7,5 @@ import java.util.Optional;
 @FunctionalInterface
 public interface GetCustomer {
 
-    Optional<Customer> getOne(String cpf);
+    Optional<Customer> getCustomer(String cpf);
 }

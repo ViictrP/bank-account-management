@@ -78,7 +78,7 @@ databaseChangeLog:
                   type: boolean
 
         - createTable:
-            tableName: bank_transition
+            tableName: bank_transaction
             columns:
               - column:
                   name: id

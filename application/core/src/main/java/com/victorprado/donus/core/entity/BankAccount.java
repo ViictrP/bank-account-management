@@ -2,6 +2,7 @@ package com.victorprado.donus.core.entity;
 
 import com.victorprado.donus.core.constant.Number;
 import com.victorprado.donus.core.usecase.createaccount.InvalidEntityException;
+import com.victorprado.donus.core.usecase.performtransaction.InsufficientBankAccountBalanceException;
 import com.victorprado.donus.core.validator.EntityValidator;
 
 import java.time.LocalDateTime;
@@ -83,6 +84,18 @@ public class BankAccount extends Upgradable implements EntityValidator {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public void reduceBalance(Double value) {
+        if (this.balance >= value) {
+            this.balance -= value;
+            return;
+        }
+        throw new InsufficientBankAccountBalanceException(this.number);
+    }
+
+    public void increaseBalance(Double value) {
+        this.balance += value;
     }
 
     @Override

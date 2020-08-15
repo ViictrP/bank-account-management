@@ -6,5 +6,5 @@ import com.victorprado.donus.core.exception.DataProviderException;
 @FunctionalInterface
 public interface CreateBankAccount {
 
-    void create(BankAccount account) throws DataProviderException;
+    void createAccount(BankAccount account) throws DataProviderException;
 }

@@ -1,20 +1,18 @@
 package rest.bankaccount;
 
-import org.apache.tomcat.jni.Local;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 
-public class BankAccountDTO {
+public class BankAccountDTO implements Dto {
 
     private String id;
     private String customerCpf;
+    private String number;
     private Double balance;
     private String createdDate;
     private String lastModifiedDate;
     private boolean deleted;
-    private EndpointStatus status;
-    private String message;
 
     public BankAccountDTO() {
 
@@ -25,7 +23,8 @@ public class BankAccountDTO {
         this.customerCpf = builder.customerCpf;
         this.balance = builder.balance;
         this.createdDate = builder.createdDate;
-        this.lastModifiedDate = builder.createdDate;
+        this.number = builder.number;
+        this.lastModifiedDate = builder.lastModifiedDate;
         this.deleted = builder.deleted;
     }
 
@@ -43,6 +42,14 @@ public class BankAccountDTO {
 
     public void setCustomerCpf(String customerCpf) {
         this.customerCpf = customerCpf;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public Double getBalance() {
@@ -77,27 +84,12 @@ public class BankAccountDTO {
         this.deleted = deleted;
     }
 
-    public EndpointStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(EndpointStatus status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public static class Builder {
         private String id;
         private String customerCpf;
         private Double balance;
         private String createdDate;
+        private String number;
         private String lastModifiedDate;
         private boolean deleted;
 
@@ -118,6 +110,11 @@ public class BankAccountDTO {
 
         public Builder createdDate(@NonNull LocalDateTime createdDate) {
             this.createdDate = createdDate.toString();
+            return this;
+        }
+
+        public Builder number(String number) {
+            this.number = number;
             return this;
         }
 

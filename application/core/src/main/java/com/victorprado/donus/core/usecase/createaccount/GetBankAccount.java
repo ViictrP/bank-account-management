@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface GetBankAccount {
 
     Optional<BankAccount> getAccount(String customerId);
+    Optional<BankAccount> getAccountByNumber(String accountNumber);
 }

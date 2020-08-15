@@ -61,15 +61,15 @@ public class CreateAccountUseCaseTest {
     }
 
     private void givenACustomerThatDoesNotHaveAccount() {
-        when(getCustomer.getOne(anyString())).thenReturn(Optional.of(customerThatDoesNotHaveAccount));
+        when(getCustomer.getCustomer(anyString())).thenReturn(Optional.of(customerThatDoesNotHaveAccount));
     }
 
     private void givenACustomerThatDoesNotExists() {
-        when(getCustomer.getOne(anyString())).thenReturn(Optional.empty());
+        when(getCustomer.getCustomer(anyString())).thenReturn(Optional.empty());
     }
 
     private void givenACustomerThatExists() {
-        when(getCustomer.getOne(anyString())).thenReturn(Optional.of(customerThatDoesNotHaveAccount));
+        when(getCustomer.getCustomer(anyString())).thenReturn(Optional.of(customerThatDoesNotHaveAccount));
     }
 
     private void givenAccountThatDoenstExists() {
