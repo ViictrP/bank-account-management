@@ -52,7 +52,7 @@ public class Customer extends Upgradable implements EntityValidator {
 
     @Override
     public void validate() {
-        if (StringUtils.isEmpty(cpf)) {
+        if (StringUtils.isEmpty(cpf) || StringUtils.isEmpty(name)) {
             throw new InvalidEntityException();
         }
     }
