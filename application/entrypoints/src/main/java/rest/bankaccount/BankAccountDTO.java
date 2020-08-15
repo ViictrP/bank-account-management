@@ -2,6 +2,7 @@ package rest.bankaccount;
 
 import org.springframework.lang.NonNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class BankAccountDTO implements Dto {
@@ -9,7 +10,7 @@ public class BankAccountDTO implements Dto {
     private String id;
     private String customerCpf;
     private String number;
-    private Double balance;
+    private BigDecimal balance;
     private String createdDate;
     private String lastModifiedDate;
     private boolean deleted;
@@ -52,11 +53,11 @@ public class BankAccountDTO implements Dto {
         this.number = number;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
@@ -87,7 +88,7 @@ public class BankAccountDTO implements Dto {
     public static class Builder {
         private String id;
         private String customerCpf;
-        private Double balance;
+        private BigDecimal balance;
         private String createdDate;
         private String number;
         private String lastModifiedDate;
@@ -103,7 +104,7 @@ public class BankAccountDTO implements Dto {
             return this;
         }
 
-        public Builder balance(Double balance) {
+        public Builder balance(BigDecimal balance) {
             this.balance = balance;
             return this;
         }

@@ -70,6 +70,26 @@ public class BankAccountEndpoint {
         }
     }
 
+    @PostMapping("/{accountNumber}/withdraws")
+    public ResponseEntity<Response> doWithdraw(@PathVariable String accountNumber, @RequestBody WithdrawDTO withdrawDTO) {
+        LOGGER.info("Withdraw transaction request received from account {} with value {}", accountNumber, withdrawDTO.getValue());
+        try {
+            BankTransaction transaction = performTransactionUseCase.withdraw(accountNumber, withdrawDTO.getValue());
+            BankTransactionDTO dto = toTransactionDTO(transaction);
+            Response response = new Response();
+            response.setStatus(EndpointStatus.SUCCESS);
+            response.setData(dto);
+            LOGGER.info("Withdraw performed. transaction identification {}", transaction.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (BankAccountNotFoundException error) {
+            LOGGER.error(error.getMessage(), error);
+            return buildErrorResponse(error.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InsufficientBankAccountBalanceException error) {
+            LOGGER.error(error.getMessage(), error);
+            return buildErrorResponse(error.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
     private ResponseEntity<Response> buildErrorResponse(String message, HttpStatus status) {
         Response response = new Response();
         response.setStatus(EndpointStatus.ERROR);

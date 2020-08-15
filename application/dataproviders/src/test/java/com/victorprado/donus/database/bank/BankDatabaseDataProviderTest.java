@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -102,7 +103,7 @@ public class BankDatabaseDataProviderTest {
     @Test
     public void shouldUpdateAccountBalanceWithSuccess() {
         BankAccount account = new BankAccount(customerEntity);
-        Double balance = 10_000.00D;
+        BigDecimal balance = BigDecimal.valueOf(10_000.00D);
 
         bankDatabaseDataProvider.updateBalance(account, balance);
         verify(jdbcTemplate).update(anyString(), eq(balance), eq(account.getId()));
@@ -116,7 +117,7 @@ public class BankDatabaseDataProviderTest {
         givenBalanceUpdateWithException();
 
         BankAccount account = new BankAccount(customerEntity);
-        Double balance = 10_000.00D;
+        BigDecimal balance = BigDecimal.valueOf(10_000.00D);
 
         bankDatabaseDataProvider.updateBalance(account, balance);
     }
@@ -127,7 +128,7 @@ public class BankDatabaseDataProviderTest {
                 .sourceAccount(new BankAccount(customerEntity))
                 .destinationAccount(new BankAccount(customerEntity))
                 .type(TransactionType.TRANSFER)
-                .value(100D)
+                .value(BigDecimal.valueOf(100D))
                 .when(LocalDateTime.now())
                 .build();
 
@@ -144,7 +145,7 @@ public class BankDatabaseDataProviderTest {
                 .sourceAccount(new BankAccount(customerEntity))
                 .destinationAccount(new BankAccount(customerEntity))
                 .type(TransactionType.TRANSFER)
-                .value(100D)
+                .value(BigDecimal.valueOf(100D))
                 .when(LocalDateTime.now())
                 .build();
 

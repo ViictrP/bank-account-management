@@ -1,5 +1,6 @@
 package rest.bankaccount;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class BankTransactionDTO implements Dto {
@@ -8,7 +9,7 @@ public class BankTransactionDTO implements Dto {
     private String sourceAccount;
     private String destinationAccount;
     private String type;
-    private Double value;
+    private BigDecimal value;
     private String when;
 
     public BankTransactionDTO(Builder builder) {
@@ -52,11 +53,11 @@ public class BankTransactionDTO implements Dto {
         this.type = type;
     }
 
-    public Double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 
@@ -73,7 +74,7 @@ public class BankTransactionDTO implements Dto {
         private String sourceAccount;
         private String destinationAccount;
         private String type;
-        private Double value;
+        private BigDecimal value;
         private String when;
 
         public Builder id(String id) {
@@ -92,7 +93,7 @@ public class BankTransactionDTO implements Dto {
             this.type = type;
             return this;
         }
-        public Builder value(Double value) {
+        public Builder value(BigDecimal value) {
             this.value = value;
             return this;
         }

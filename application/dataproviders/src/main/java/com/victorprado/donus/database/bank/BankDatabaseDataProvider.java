@@ -18,6 +18,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.lang.NonNull;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class BankDatabaseDataProvider implements GetCustomer, CreateBankAccount, GetBankAccount, UpdateBankAccountBalance, SaveTransaction {
@@ -76,7 +77,7 @@ public class BankDatabaseDataProvider implements GetCustomer, CreateBankAccount,
     }
 
     @Override
-    public void updateBalance(BankAccount bankAccount, Double newValue) throws DataProviderException {
+    public void updateBalance(BankAccount bankAccount, BigDecimal newValue) throws DataProviderException {
         try {
             jdbcTemplate.update("UPDATE donus.bank_account SET balance = ? WHERE id = ?", newValue, bankAccount.getId());
             bankAccount.setBalance(newValue);

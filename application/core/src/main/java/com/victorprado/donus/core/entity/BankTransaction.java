@@ -1,5 +1,6 @@
 package com.victorprado.donus.core.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ public class BankTransaction {
     private BankAccount sourceAccount;
     private BankAccount destinationAccount;
     private TransactionType type;
-    private Double value;
+    private BigDecimal value;
     private LocalDateTime when;
 
     public BankTransaction() {
@@ -57,11 +58,11 @@ public class BankTransaction {
         this.type = type;
     }
 
-    public Double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 
@@ -77,7 +78,7 @@ public class BankTransaction {
         private BankAccount sourceAccount;
         private BankAccount destinationAccount;
         private TransactionType type;
-        private Double value;
+        private BigDecimal value;
         private LocalDateTime when;
 
         public Builder sourceAccount(BankAccount sourceAccount) {
@@ -92,7 +93,7 @@ public class BankTransaction {
             this.type = type;
             return this;
         }
-        public Builder value(Double value) {
+        public Builder value(BigDecimal value) {
             this.value = value;
             return this;
         }

@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -72,11 +73,11 @@ public class BankAccountEndpointTest {
 
     @Test
     public void shouldMakeTransferWithSuccess() {
-        givenTransactionPerformed();
+        givenTransferPerformed();
 
         TransferTransactionDTO dto = new TransferTransactionDTO();
         dto.setDestinationAccountNumber("5235453");
-        dto.setValue(100D);
+        dto.setValue(BigDecimal.valueOf(100D));
         dto.setWhen(LocalDateTime.now().toString());
 
         ResponseEntity<Response> response = bankAccountEndpoint.makeTransfer("23121", dto);
@@ -86,12 +87,25 @@ public class BankAccountEndpointTest {
     }
 
     @Test
+    public void shouldDoWithdrawWithSuccess() {
+        givenWithdrawPerformed();
+
+        WithdrawDTO dto = new WithdrawDTO();
+        dto.setValue(BigDecimal.valueOf(100D));
+
+        ResponseEntity<Response> response = bankAccountEndpoint.doWithdraw("23121", dto);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(Objects.requireNonNull(response.getBody()).getStatus()).isEqualTo(EndpointStatus.SUCCESS);
+    }
+
+    @Test
     public void shouldNotMakeTransferWithAccountDoenstExist() {
-        givenTransactionNotPerformedDueToAccountNonexistent();
+        givenTransferNotPerformedDueToAccountNonexistent();
 
         TransferTransactionDTO dto = new TransferTransactionDTO();
         dto.setDestinationAccountNumber("5235453");
-        dto.setValue(100D);
+        dto.setValue(BigDecimal.valueOf(100D));
         dto.setWhen(LocalDateTime.now().toString());
 
         ResponseEntity<Response> response = bankAccountEndpoint.makeTransfer("23121", dto);
@@ -101,15 +115,41 @@ public class BankAccountEndpointTest {
     }
 
     @Test
+    public void shouldNotDoWithdrawWithAccountDoenstExist() {
+        givenWithdrawNotPerformedDueToAccountNonexistent();
+
+        WithdrawDTO dto = new WithdrawDTO();
+        dto.setValue(BigDecimal.valueOf(100D));
+
+        ResponseEntity<Response> response = bankAccountEndpoint.doWithdraw("23121", dto);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(Objects.requireNonNull(response.getBody()).getStatus()).isEqualTo(EndpointStatus.ERROR);
+    }
+
+    @Test
     public void shouldNotMakeTransferWithAccountDoenstHaveEnoughBalance() {
-        givenTransactionNotPerformedDueToInsufficientFunds();
+        givenTransferNotPerformedDueToInsufficientFunds();
 
         TransferTransactionDTO dto = new TransferTransactionDTO();
         dto.setDestinationAccountNumber("5235453");
-        dto.setValue(100D);
+        dto.setValue(BigDecimal.valueOf(100D));
         dto.setWhen(LocalDateTime.now().toString());
 
         ResponseEntity<Response> response = bankAccountEndpoint.makeTransfer("23121", dto);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+        assertThat(Objects.requireNonNull(response.getBody()).getStatus()).isEqualTo(EndpointStatus.ERROR);
+    }
+
+    @Test
+    public void shouldNotDoWithdrawWithAccountDoenstHaveEnoughBalance() {
+        givenWidthdrawNotPerformedDueToInsufficientFunds();
+
+        WithdrawDTO dto = new WithdrawDTO();
+        dto.setValue(BigDecimal.valueOf(100D));
+
+        ResponseEntity<Response> response = bankAccountEndpoint.doWithdraw("23121", dto);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
         assertThat(Objects.requireNonNull(response.getBody()).getStatus()).isEqualTo(EndpointStatus.ERROR);
@@ -131,16 +171,28 @@ public class BankAccountEndpointTest {
         when(createAccountUseCase.create(anyObject())).thenThrow(CustomerAlreadyHasAccountException.class);
     }
 
-    private void givenTransactionPerformed() {
-        when(performTransactionUseCase.transfer(anyString(), anyString(), anyDouble())).thenReturn(generateBankTransaction());
+    private void givenTransferPerformed() {
+        when(performTransactionUseCase.transfer(anyString(), anyString(), anyObject())).thenReturn(generateBankTransaction());
     }
 
-    private void givenTransactionNotPerformedDueToAccountNonexistent() {
-        when(performTransactionUseCase.transfer(anyString(), anyString(), anyDouble())).thenThrow(BankAccountNotFoundException.class);
+    private void givenWithdrawPerformed() {
+        when(performTransactionUseCase.withdraw(anyString(), anyObject())).thenReturn(generateBankTransaction());
     }
 
-    private void givenTransactionNotPerformedDueToInsufficientFunds() {
-        when(performTransactionUseCase.transfer(anyString(), anyString(), anyDouble())).thenThrow(InsufficientBankAccountBalanceException.class);
+    private void givenTransferNotPerformedDueToAccountNonexistent() {
+        when(performTransactionUseCase.transfer(anyString(), anyString(), anyObject())).thenThrow(BankAccountNotFoundException.class);
+    }
+
+    private void givenWithdrawNotPerformedDueToAccountNonexistent() {
+        when(performTransactionUseCase.withdraw(anyString(), anyObject())).thenThrow(BankAccountNotFoundException.class);
+    }
+
+    private void givenTransferNotPerformedDueToInsufficientFunds() {
+        when(performTransactionUseCase.transfer(anyString(), anyString(), anyObject())).thenThrow(InsufficientBankAccountBalanceException.class);
+    }
+
+    private void givenWidthdrawNotPerformedDueToInsufficientFunds() {
+        when(performTransactionUseCase.withdraw(anyString(), anyObject())).thenThrow(InsufficientBankAccountBalanceException.class);
     }
 
     private BankAccount generateBankAccount() {
@@ -156,7 +208,7 @@ public class BankAccountEndpointTest {
         return new BankTransaction.Builder()
                 .sourceAccount(generateBankAccount())
                 .destinationAccount(generateBankAccount())
-                .value(100D)
+                .value(BigDecimal.valueOf(100D))
                 .type(TransactionType.TRANSFER)
                 .when(LocalDateTime.now())
                 .build();

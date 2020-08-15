@@ -5,6 +5,7 @@ import com.victorprado.donus.core.usecase.createaccount.InvalidEntityException;
 import com.victorprado.donus.core.usecase.performtransaction.InsufficientBankAccountBalanceException;
 import com.victorprado.donus.core.validator.EntityValidator;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ public class BankAccount extends Upgradable implements EntityValidator {
     private String id;
     private String number;
     private Customer customer;
-    private Double balance;
+    private BigDecimal balance;
     private boolean deleted;
 
     public BankAccount() {
@@ -33,7 +34,7 @@ public class BankAccount extends Upgradable implements EntityValidator {
     private void generateData() {
         this.id = UUID.randomUUID().toString();
         this.number = UUID.randomUUID().toString();
-        this.balance = Number.ZERO;
+        this.balance = BigDecimal.ZERO;
     }
 
     public String getId() {
@@ -60,11 +61,11 @@ public class BankAccount extends Upgradable implements EntityValidator {
         this.customer = customer;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
@@ -86,16 +87,16 @@ public class BankAccount extends Upgradable implements EntityValidator {
         this.deleted = deleted;
     }
 
-    public void reduceBalance(Double value) {
-        if (this.balance >= value) {
-            this.balance -= value;
+    public void reduceBalance(BigDecimal value) {
+        if (this.balance.compareTo(value) >= 0) {
+            this.balance = this.balance.subtract(value);
             return;
         }
         throw new InsufficientBankAccountBalanceException(this.number);
     }
 
-    public void increaseBalance(Double value) {
-        this.balance += value;
+    public void increaseBalance(BigDecimal value) {
+        this.balance = this.balance.add(value);
     }
 
     @Override

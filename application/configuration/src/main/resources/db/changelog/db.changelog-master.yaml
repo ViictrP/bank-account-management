@@ -58,7 +58,7 @@ databaseChangeLog:
                     onUpdate: RESTRICT
               - column:
                   name: balance
-                  type: numeric(12,4)
+                  type: numeric(12,2)
                   constraints:
                     nullable: false
               - column:
@@ -108,6 +108,6 @@ databaseChangeLog:
                   type: varchar(255)
               - column:
                   name: amount
-                  type: numeric(12,4)
+                  type: numeric(12,2)
                   constraints:
                     nullable: false
