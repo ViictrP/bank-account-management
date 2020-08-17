@@ -6,6 +6,7 @@ public class DataProviderInsertException extends DataProviderException {
 
     private static final String MESSAGE = "Error to execute insert into database";
 
+    @Override
     public String getMessage() {
         return MESSAGE;
     }

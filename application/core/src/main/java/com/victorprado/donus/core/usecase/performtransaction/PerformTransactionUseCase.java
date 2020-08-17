@@ -15,6 +15,7 @@ public class PerformTransactionUseCase {
     private static final Logger LOGGER = LoggerFactory.getLogger(PerformTransactionUseCase.class);
     public static final BigDecimal TAX = BigDecimal.valueOf(0.01);
     public static final BigDecimal BONUS = BigDecimal.valueOf(0.005);
+    private static final String SAVING_TRANSACTION_LOG_MESSAGE = "saving the transaction {}";
 
     private final GetBankAccount getBankAccount;
     private final UpdateBankAccountBalance updateBankAccountBalance;
@@ -55,7 +56,7 @@ public class PerformTransactionUseCase {
         LOGGER.info("updating destination account balance {}", destinationAccountNumber);
         updateBankAccountBalance.updateBalance(destinationAccount, destinationAccount.getBalance());
 
-        LOGGER.info("saving the transaction {}", transaction.getId());
+        LOGGER.info(SAVING_TRANSACTION_LOG_MESSAGE, transaction.getId());
         saveTransaction.saveTransaction(transaction);
 
         return transaction;
@@ -80,7 +81,7 @@ public class PerformTransactionUseCase {
                 .when(LocalDateTime.now())
                 .build();
 
-        LOGGER.info("saving the transaction {}", transaction.getId());
+        LOGGER.info(SAVING_TRANSACTION_LOG_MESSAGE, transaction.getId());
         saveTransaction.saveTransaction(transaction);
 
         return transaction;
@@ -105,7 +106,7 @@ public class PerformTransactionUseCase {
                 .when(LocalDateTime.now())
                 .build();
 
-        LOGGER.info("saving the transaction {}", transaction.getId());
+        LOGGER.info(SAVING_TRANSACTION_LOG_MESSAGE, transaction.getId());
         saveTransaction.saveTransaction(transaction);
 
         return transaction;
