@@ -109,6 +109,38 @@ public class PerformTransactionUseCaseTest {
         performTransactionUseCase.transfer("12345", "67890", transferValue);
     }
 
+    @Test
+    public void shouldDepositWithSuccess() {
+        givenAccountThatExists();
+
+        account1.setBalance(BigDecimal.ZERO);
+        BigDecimal depositValue = BigDecimal.valueOf(1000.00);
+
+        BankTransaction transaction = performTransactionUseCase.deposit("12345", depositValue);
+
+        assertThat(transaction).isNotNull();
+        assertThat(transaction.getSourceAccount().getId()).isEqualTo(account1.getId());
+        assertThat(transaction.getType()).isEqualTo(TransactionType.DEPOSIT);
+        assertThat(transaction.getWhen()).isNotNull();
+        assertThat(transaction.getValue()).isEqualByComparingTo(depositValue);
+
+        BankAccount sourceAccount = transaction.getSourceAccount();
+
+        BigDecimal bonus = BigDecimal.valueOf(0.005);
+        BigDecimal depositWithBonus = depositValue.add(depositValue.multiply(bonus));
+
+        assertThat(sourceAccount.getBalance()).isEqualByComparingTo(depositWithBonus);
+    }
+
+    @Test(expected = BankAccountNotFoundException.class)
+    public void shoudNotDepositIntoNonExistentgAccount() {
+        givenAccountThatDoesntExist();
+
+        BigDecimal depositValue = BigDecimal.valueOf(1000.00);
+
+        performTransactionUseCase.deposit("67890", depositValue);
+    }
+
     private void givenAccountThatExists() {
         account1.setNumber("12345");
         account1.setBalance(BigDecimal.valueOf(100.00D));
@@ -131,6 +163,10 @@ public class PerformTransactionUseCaseTest {
 
         when(getBankAccount.getAccountByNumber(eq("12345"))).thenReturn(Optional.empty());
         when(getBankAccount.getAccountByNumber(eq("67890"))).thenReturn(Optional.of(account2));
+    }
+
+    private void givenAccountThatDoesntExist() {
+        when(getBankAccount.getAccountByNumber(anyString())).thenReturn(Optional.empty());
     }
 
     private void givenDestinationAccountThatDoenstExists() {

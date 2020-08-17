@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 public class PerformTransactionUseCase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PerformTransactionUseCase.class);
+    public static final BigDecimal TAX = BigDecimal.valueOf(0.01);
+    public static final BigDecimal BONUS = BigDecimal.valueOf(0.005);
 
     private final GetBankAccount getBankAccount;
     private final UpdateBankAccountBalance updateBankAccountBalance;
@@ -65,7 +67,7 @@ public class PerformTransactionUseCase {
                 .orElseThrow(BankAccountNotFoundException::new);
 
         LOGGER.info("withdrawing value {} from account {}", withdrawValue, accountNumber);
-        BigDecimal valueWithTax = withdrawValue.add(withdrawValue.multiply(BigDecimal.valueOf(0.01)));
+        BigDecimal valueWithTax = withdrawValue.add(withdrawValue.multiply(TAX));
         account.reduceBalance(valueWithTax);
 
         LOGGER.info("updating account balance {}", accountNumber);
@@ -75,6 +77,31 @@ public class PerformTransactionUseCase {
                 .sourceAccount(account)
                 .value(withdrawValue)
                 .type(TransactionType.WITHDRAW)
+                .when(LocalDateTime.now())
+                .build();
+
+        LOGGER.info("saving the transaction {}", transaction.getId());
+        saveTransaction.saveTransaction(transaction);
+
+        return transaction;
+    }
+
+    public BankTransaction deposit(String accountNumber, BigDecimal depositValue) {
+        LOGGER.info("obtaining the account {}", accountNumber);
+        BankAccount account = getBankAccount.getAccountByNumber(accountNumber)
+                .orElseThrow(BankAccountNotFoundException::new);
+
+        LOGGER.info("depositing value {} into account {}", depositValue, accountNumber);
+        BigDecimal depositWithBonus = depositValue.add(depositValue.multiply(BONUS));
+        account.increaseBalance(depositWithBonus);
+
+        LOGGER.info("updating account balance {}", accountNumber);
+        updateBankAccountBalance.updateBalance(account, account.getBalance());
+
+        BankTransaction transaction = new BankTransaction.Builder()
+                .sourceAccount(account)
+                .value(depositValue)
+                .type(TransactionType.DEPOSIT)
                 .when(LocalDateTime.now())
                 .build();
 

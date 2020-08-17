@@ -90,6 +90,23 @@ public class BankAccountEndpoint {
         }
     }
 
+    @PostMapping("/{accountNumber}/deposits")
+    public ResponseEntity<Response> deposit(@PathVariable String accountNumber, @RequestBody DepositDTO depositDTO) {
+        LOGGER.info("Deposit transaction request received into account {} with value {}", accountNumber, depositDTO.getValue());
+        try {
+            BankTransaction transaction = performTransactionUseCase.deposit(accountNumber, depositDTO.getValue());
+            BankTransactionDTO dto = toTransactionDTO(transaction);
+            Response response = new Response();
+            response.setStatus(EndpointStatus.SUCCESS);
+            response.setData(dto);
+            LOGGER.info("Deposit performed. transaction identification {}", transaction.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (BankAccountNotFoundException error) {
+            LOGGER.error(error.getMessage(), error);
+            return buildErrorResponse(error.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     private ResponseEntity<Response> buildErrorResponse(String message, HttpStatus status) {
         Response response = new Response();
         response.setStatus(EndpointStatus.ERROR);

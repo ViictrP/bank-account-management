@@ -155,6 +155,32 @@ public class BankAccountEndpointTest {
         assertThat(Objects.requireNonNull(response.getBody()).getStatus()).isEqualTo(EndpointStatus.ERROR);
     }
 
+    @Test
+    public void shouldDepositIntoAccountWithSuccess() {
+        givenDepositoIntoAccountPerformedWithSuccess();
+
+        DepositDTO dto = new DepositDTO();
+        dto.setValue(BigDecimal.valueOf(100D));
+
+        ResponseEntity<Response> response = bankAccountEndpoint.deposit("23121", dto);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(Objects.requireNonNull(response.getBody()).getStatus()).isEqualTo(EndpointStatus.SUCCESS);
+    }
+
+    @Test
+    public void shouldNotDepositIntoNonExistentAccount() {
+        givenDepositoIntoAccountNotPerformedDueToAccountNonExistent();
+
+        DepositDTO dto = new DepositDTO();
+        dto.setValue(BigDecimal.valueOf(100D));
+
+        ResponseEntity<Response> response = bankAccountEndpoint.deposit("23121", dto);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(Objects.requireNonNull(response.getBody()).getStatus()).isEqualTo(EndpointStatus.ERROR);
+    }
+
     private void givenValidAccountCreated() {
         when(createAccountUseCase.create(anyObject())).thenReturn(generateBankAccount());
     }
@@ -193,6 +219,14 @@ public class BankAccountEndpointTest {
 
     private void givenWidthdrawNotPerformedDueToInsufficientFunds() {
         when(performTransactionUseCase.withdraw(anyString(), anyObject())).thenThrow(InsufficientBankAccountBalanceException.class);
+    }
+
+    private void givenDepositoIntoAccountPerformedWithSuccess() {
+        when(performTransactionUseCase.deposit(anyString(), any())).thenReturn(generateBankTransaction());
+    }
+
+    private void givenDepositoIntoAccountNotPerformedDueToAccountNonExistent() {
+        when(performTransactionUseCase.deposit(anyString(), any())).thenThrow(BankAccountNotFoundException.class);
     }
 
     private BankAccount generateBankAccount() {
