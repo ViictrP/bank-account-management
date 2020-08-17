@@ -1,5 +1,5 @@
 # BANK ACCOUNT MANAGEMENT API
-API for bank accounts management
+API for bank account management
 
 ## Endpoints
 The endpoints for consume this API
