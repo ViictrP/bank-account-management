@@ -19,7 +19,11 @@ ENV DEFAULT_SCHEMA=$DEFAULT_SCHEMA
 
 FROM openjdk:11-jre-slim
 
-RUN mkdir /app
+RUN mkdir /app && \
+    groupadd app && \
+    useradd app -u 1001 -g app -d /app -s /bin/bash
+
+RUN chown 1001:app /app -R
 
 COPY --from=build /home/gradle/src/application/build/*.jar /app/
 

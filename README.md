@@ -12,13 +12,14 @@ The endpoints for consume this API
     docker build --tag bank-account-management -f devops/Dockerfile .
     
 ## Running the application
-Before running the application in Docker, you must run docker compose on `devops/docker-compose.yml`.
+>Before running the application in Docker, you must run docker compose on `devops/docker-compose.yml`.
 This will run all the dependencies for this application to start.
 
 Now you can run the docker image you have built
 
     docker run -e PORT=8080 \
-              -e DB_HOST=localhost \
+              -e DB_HOST=your.ip.address \
+              -e DB_PORT=15432 \
               -e DB_USER=postgres \
               -e DB_PASSWORD=bankAccountManagementAdmin \
               -e DEFAULT_SCHEMA=donus \
