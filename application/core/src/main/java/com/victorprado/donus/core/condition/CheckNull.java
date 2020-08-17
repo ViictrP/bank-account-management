@@ -10,13 +10,13 @@ public final class CheckNull {
 
     public static void check(Object object, String message) {
         if (object != null) {
-            throw new NotNullObject(message);
+            throw new NotNullObjectException(message);
         }
     }
 
     public static void check(Optional object, String message) {
         if (object.isPresent()) {
-            throw new NotNullObject(message);
+            throw new NotNullObjectException(message);
         }
     }
 }

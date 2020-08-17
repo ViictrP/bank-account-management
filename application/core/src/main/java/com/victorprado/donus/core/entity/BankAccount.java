@@ -1,6 +1,5 @@
 package com.victorprado.donus.core.entity;
 
-import com.victorprado.donus.core.constant.Number;
 import com.victorprado.donus.core.usecase.createaccount.InvalidEntityException;
 import com.victorprado.donus.core.usecase.performtransaction.InsufficientBankAccountBalanceException;
 import com.victorprado.donus.core.validator.EntityValidator;
