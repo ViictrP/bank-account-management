@@ -25,3 +25,10 @@ Now you can run the docker image you have built
               -e DEFAULT_SCHEMA=donus \
               -p 8080:8080  \
             bank-account-management
+            
+To verify if the API is UP go to `http://localhost:8080/actuator/health`
+
+## API Documentation
+The Swagger of this application can be found at <br>
+ #### `http://localhost:8080/swagger-ui.html`
+

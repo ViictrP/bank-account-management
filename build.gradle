@@ -23,7 +23,8 @@ subprojects {
                         "org.springframework.boot:spring-boot-starter-web:${spring_version}",
                         "org.springframework.boot:spring-boot-starter-actuator:${spring_version}",
                         "org.springframework.boot:spring-boot-starter-logging:${spring_version}",
-                        "org.postgresql:postgresql:42.2.14"
+                        "io.springfox:springfox-swagger2:2.9.2",
+                        "io.springfox:springfox-swagger-ui:2.9.2"
                 ],
 
                 rest                   : [
@@ -36,6 +37,7 @@ subprojects {
                 ],
 
                 database               : [
+                        "org.postgresql:postgresql:42.2.14",
                         "org.springframework.boot:spring-boot-starter-jdbc:${spring_version}",
                         "org.springframework.boot:spring-boot-starter-data-jdbc:${spring_version}"
                 ],
