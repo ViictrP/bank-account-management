@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.lang.NonNull;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -76,6 +77,7 @@ public class BankDatabaseDataProvider implements GetCustomer, CreateBankAccount,
         }
     }
 
+    @Transactional
     @Override
     public void updateBalance(BankAccount bankAccount, BigDecimal newValue) throws DataProviderException {
         try {
@@ -87,12 +89,14 @@ public class BankDatabaseDataProvider implements GetCustomer, CreateBankAccount,
         }
     }
 
+    @Transactional
     @Override
     public void saveTransaction(@NonNull BankTransaction transaction) throws DataProviderException {
         try {
+            String destinationAccountId = transaction.getDestinationAccount() != null ? transaction.getDestinationAccount().getId(): null;
             jdbcTemplate.update(
                     "INSERT INTO donus.bank_transaction(id, type, transaction_date, source_account_id, destination_account_id, amount) VALUES(?,?,?,?,?,?)",
-                    transaction.getId(), transaction.getType().getDescription(), transaction.getWhen(), transaction.getSourceAccount().getId(), transaction.getDestinationAccount().getId(), transaction.getValue()
+                    transaction.getId(), transaction.getType().getDescription(), transaction.getWhen(), transaction.getSourceAccount().getId(), destinationAccountId, transaction.getValue()
             );
         } catch (DataAccessException error) {
             LOGGER.error(error.getMessage());

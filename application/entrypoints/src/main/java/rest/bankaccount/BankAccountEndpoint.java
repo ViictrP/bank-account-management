@@ -115,10 +115,11 @@ public class BankAccountEndpoint {
     }
 
     private BankTransactionDTO toTransactionDTO(BankTransaction transaction) {
+        BankAccount destinationAccount = transaction.getDestinationAccount();
         return new BankTransactionDTO.Builder()
                 .id(transaction.getId())
                 .sourceAccount(transaction.getSourceAccount().getNumber())
-                .destinationAccount(transaction.getDestinationAccount().getNumber())
+                .destinationAccount(destinationAccount != null ? destinationAccount.getNumber() : null)
                 .type(transaction.getType().getDescription())
                 .value(transaction.getValue())
                 .when(transaction.getWhen())
